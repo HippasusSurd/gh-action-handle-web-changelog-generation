@@ -1,0 +1,25 @@
+{
+  "name": "gh-action-handle-web-changelog-generation",
+  "version": "1.0.0",
+  "description": "Handles creating a changelog via LLM for web PRs",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Leonardo-Interactive/gh-action-handle-web-changelog-generation.git"
+  },
+  "author": "joel@leonardo.ai",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Leonardo-Interactive/gh-action-handle-web-changelog-generation/issues"
+  },
+  "homepage": "https://github.com/Leonardo-Interactive/gh-action-handle-web-changelog-generation#readme",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.0",
+    "dotenv": "^16.4.7",
+    "openai": "^4.87.3"
+  }
+}

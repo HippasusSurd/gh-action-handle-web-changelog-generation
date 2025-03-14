@@ -1,0 +1,22 @@
+name: "Generate Changelog from PR"
+description: "Fetches PR description and Jira ticket details, then generates and posts a changelog."
+author: "joel@leonardo.ai"
+inputs:
+  pr-bot-token:
+    description: "PR Bot Github Account Secret"
+    required: true
+  atlassian-base-url:
+    description: "Atlassian Base URL"
+    required: true
+  atlassian-email:
+    description: "Atlassian Email"
+    required: true
+  atlassian-secret:
+    description: "Atlassian Secret"
+    required: true
+  openai-secret:
+    description: "OpenAI Secret"
+    required: true
+runs:
+  using: "node16"
+  main: "index.js"

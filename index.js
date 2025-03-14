@@ -1,16 +1,3 @@
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
-
-// Debug environment variables
-console.log('Current directory:', __dirname);
-console.log('Environment variables loaded:', {
-  GITHUB_TOKEN: process.env.GITHUB_TOKEN ? '***' : undefined,
-  JIRA_BASE_URL: process.env.ATLASSIAN_BASE_URL,
-  JIRA_USER: process.env.ATLASSIAN_EMAIL,
-  JIRA_API_TOKEN: process.env.ATLASSIAN_SECRET ? '***' : undefined,
-  OPENAI_API_KEY: process.env.OPENAI_SECRET ? '***' : undefined
-});
-
 const core = require('@actions/core');
 const github = require('@actions/github');
 const fetch = require('node-fetch');
@@ -21,11 +8,11 @@ const { createChangelogComment } = require('./createChangelogComment');
 async function run() {
   try {
     // Use GitHub Actions inputs with fallback to environment variables
-    const token = core.getInput('pr-bot-token') || process.env.PR_BOT_TOKEN;
-    const jiraBaseUrl = (core.getInput('atlassian-base-url') || process.env.ATLASSIAN_BASE_URL || '').replace(/\/$/, '');
-    const jiraUser = core.getInput('atlassian-email') || process.env.ATLASSIAN_EMAIL;
-    const jiraApiToken = core.getInput('atlassian-secret') || process.env.ATLASSIAN_SECRET;
-    const openaiApiKey = core.getInput('openai-secret') || process.env.OPENAI_SECRET;
+    const token = core.getInput('pr-bot-token') 
+    const jiraBaseUrl = core.getInput('atlassian-base-url') 
+    const jiraUser = core.getInput('atlassian-email') 
+    const jiraApiToken = core.getInput('atlassian-secret')
+    const openaiApiKey = core.getInput('openai-secret')
 
     const context = github.context;
     const prDescription = context.payload.pull_request.body;

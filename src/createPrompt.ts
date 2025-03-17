@@ -40,5 +40,5 @@ Given:
 - Jira Ticket Description: \`\`\`${jiraDescription}\`\`\`
 
 Create the changelog entry below using the refined template and guidelines provided.
-`;
-}; 
+`
+}

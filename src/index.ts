@@ -22,6 +22,7 @@ console.log('Environment variables loaded:', {
 interface JiraResponse {
   fields: {
     description?: string
+    summary?: string
   }
 }
 
@@ -36,6 +37,7 @@ async function run(): Promise<void> {
 
     const context = github.context
     const prDescription = context.payload.pull_request?.body || ''
+    const prTitle = context.payload.pull_request?.title || ''
     const prNumber = context.payload.pull_request?.number ?? 0
     const repoFullName = context.payload.repository?.full_name || ''
     const runId = context.runId
@@ -70,10 +72,11 @@ async function run(): Promise<void> {
       throw new Error('Unexpected Jira API response format - missing fields property')
     }
     
+    const jiraTitle = jiraData.fields.summary || ""
     const jiraDescription = jiraData.fields.description || ""
 
     // Compose prompt for LLM
-    const prompt = createPrompt(prDescription, jiraDescription)
+    const prompt = createPrompt(prTitle, prDescription, jiraTitle, jiraDescription)
 
     const openAiClient = new OpenAI({
       apiKey: openaiApiKey,

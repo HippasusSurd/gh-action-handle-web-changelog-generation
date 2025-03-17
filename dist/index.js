@@ -40,7 +40,7 @@ exports.createChangelogComment = createChangelogComment;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createPrompt = void 0;
-const createPrompt = (prDescription, jiraDescription) => {
+const createPrompt = (prTitle, prDescription, jiraTitle, jiraDescription) => {
     return `Your task is to create a concise and clear changelog entry from the given pull request (PR) description and associated Jira ticket description.
 
 Context:
@@ -78,7 +78,9 @@ Use the following refined changelog template:
 \`\`\`
 
 Given:
+- PR Title: "${prTitle}"
 - PR Description: \`\`\`${prDescription}\`\`\`
+- Jira Ticket Title: "${jiraTitle}"
 - Jira Ticket Description: \`\`\`${jiraDescription}\`\`\`
 
 Create the changelog entry below using the refined template and guidelines provided.
@@ -159,6 +161,7 @@ async function run() {
         const openaiApiKey = core.getInput('openai-secret') || process.env.OPENAI_SECRET || '';
         const context = github.context;
         const prDescription = context.payload.pull_request?.body || '';
+        const prTitle = context.payload.pull_request?.title || '';
         const prNumber = context.payload.pull_request?.number ?? 0;
         const repoFullName = context.payload.repository?.full_name || '';
         const runId = context.runId;
@@ -186,9 +189,10 @@ async function run() {
         if (!jiraData.fields) {
             throw new Error('Unexpected Jira API response format - missing fields property');
         }
+        const jiraTitle = jiraData.fields.summary || "";
         const jiraDescription = jiraData.fields.description || "";
         // Compose prompt for LLM
-        const prompt = (0, createPrompt_1.createPrompt)(prDescription, jiraDescription);
+        const prompt = (0, createPrompt_1.createPrompt)(prTitle, prDescription, jiraTitle, jiraDescription);
         const openAiClient = new openai_1.default({
             apiKey: openaiApiKey,
         });

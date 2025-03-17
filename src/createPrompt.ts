@@ -1,4 +1,4 @@
-export const createPrompt = (prDescription: string, jiraDescription: string): string => {
+export const createPrompt = (prTitle: string, prDescription: string, jiraTitle: string, jiraDescription: string): string => {
     return `Your task is to create a concise and clear changelog entry from the given pull request (PR) description and associated Jira ticket description.
 
 Context:
@@ -36,7 +36,9 @@ Use the following refined changelog template:
 \`\`\`
 
 Given:
+- PR Title: "${prTitle}"
 - PR Description: \`\`\`${prDescription}\`\`\`
+- Jira Ticket Title: "${jiraTitle}"
 - Jira Ticket Description: \`\`\`${jiraDescription}\`\`\`
 
 Create the changelog entry below using the refined template and guidelines provided.

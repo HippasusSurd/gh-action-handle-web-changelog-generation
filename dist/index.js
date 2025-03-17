@@ -184,6 +184,7 @@ async function run() {
         const jiraDescription = jiraData.fields.description || "";
         // Compose prompt for LLM
         const prompt = (0, createPrompt_1.createPrompt)(prTitle, prDescription, jiraTitle, jiraDescription);
+        console.log('Prompt:', prompt);
         const openAiClient = new openai_1.default({
             apiKey: openaiApiKey,
         });

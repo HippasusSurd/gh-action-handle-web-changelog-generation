@@ -67,6 +67,7 @@ async function run(): Promise<void> {
 
     // Compose prompt for LLM
     const prompt = createPrompt(prTitle, prDescription, jiraTitle, jiraDescription)
+    console.log('Prompt:', prompt)
 
     const openAiClient = new OpenAI({
       apiKey: openaiApiKey,

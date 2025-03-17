@@ -217,7 +217,7 @@ async function run() {
             repo: repoName,
             issue_number: prNumber,
         });
-        const existingComment = comments.data.find(comment => comment.body?.includes('<!-- generated-changelog -->'));
+        const existingComment = comments.data.find(comment => comment.body?.includes('<!-- automated-changelog -->'));
         if (existingComment) {
             // Update existing comment
             await octokit.rest.issues.updateComment({

@@ -112,7 +112,7 @@ async function run(): Promise<void> {
     })
 
     const existingComment = comments.data.find(comment => 
-      comment.body?.includes('<!-- generated-changelog -->')
+      comment.body?.includes('<!-- automated-changelog -->')
     )
 
     if (existingComment) {

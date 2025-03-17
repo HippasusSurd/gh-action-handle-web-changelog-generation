@@ -142,15 +142,6 @@ const openai_1 = __importDefault(__nccwpck_require__(2583));
 const createPrompt_1 = __nccwpck_require__(3484);
 const createChangelogComment_1 = __nccwpck_require__(1177);
 dotenv_1.default.config({ path: path_1.default.join(__dirname, '.env') });
-// Debug environment variables
-console.log('Current directory:', __dirname);
-console.log('Environment variables loaded:', {
-    GITHUB_TOKEN: process.env.GITHUB_TOKEN ? '***' : undefined,
-    JIRA_BASE_URL: process.env.ATLASSIAN_BASE_URL,
-    JIRA_USER: process.env.ATLASSIAN_EMAIL,
-    JIRA_API_TOKEN: process.env.ATLASSIAN_SECRET ? '***' : undefined,
-    OPENAI_API_KEY: process.env.OPENAI_SECRET ? '***' : undefined
-});
 async function run() {
     try {
         // Use GitHub Actions inputs with fallback to environment variables

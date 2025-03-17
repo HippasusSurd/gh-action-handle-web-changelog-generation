@@ -9,16 +9,6 @@ import { createChangelogComment } from './createChangelogComment'
 
 dotenv.config({ path: path.join(__dirname, '.env') })
 
-// Debug environment variables
-console.log('Current directory:', __dirname)
-console.log('Environment variables loaded:', {
-  GITHUB_TOKEN: process.env.GITHUB_TOKEN ? '***' : undefined,
-  JIRA_BASE_URL: process.env.ATLASSIAN_BASE_URL,
-  JIRA_USER: process.env.ATLASSIAN_EMAIL,
-  JIRA_API_TOKEN: process.env.ATLASSIAN_SECRET ? '***' : undefined,
-  OPENAI_API_KEY: process.env.OPENAI_SECRET ? '***' : undefined
-})
-
 interface JiraResponse {
   fields: {
     description?: string

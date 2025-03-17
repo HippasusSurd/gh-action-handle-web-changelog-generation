@@ -1,5 +1,13 @@
-const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+import path from 'path';
+import dotenv from 'dotenv';
+import * as core from '@actions/core';
+import * as github from '@actions/github';
+import fetch from 'node-fetch';
+import OpenAI from 'openai';
+import { createPrompt } from './createPrompt';
+import { createChangelogComment } from './createChangelogComment';
+
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 // Debug environment variables
 console.log('Current directory:', __dirname);
@@ -11,26 +19,25 @@ console.log('Environment variables loaded:', {
   OPENAI_API_KEY: process.env.OPENAI_SECRET ? '***' : undefined
 });
 
-const core = require('@actions/core');
-const github = require('@actions/github');
-const fetch = require('node-fetch');
-const OpenAI = require('openai');
-const { createPrompt } = require('./createPrompt');
-const { createChangelogComment } = require('./createChangelogComment');
+interface JiraResponse {
+  fields: {
+    description?: string;
+  };
+}
 
-async function run() {
+async function run(): Promise<void> {
   try {
     // Use GitHub Actions inputs with fallback to environment variables
-    const token = core.getInput('pr-bot-token') || process.env.PR_BOT_TOKEN;
+    const token = core.getInput('pr-bot-token') || process.env.PR_BOT_TOKEN || '';
     const jiraBaseUrl = (core.getInput('atlassian-base-url') || process.env.ATLASSIAN_BASE_URL || '').replace(/\/$/, '');
-    const jiraUser = core.getInput('atlassian-email') || process.env.ATLASSIAN_EMAIL;
-    const jiraApiToken = core.getInput('atlassian-secret') || process.env.ATLASSIAN_SECRET;
-    const openaiApiKey = core.getInput('openai-secret') || process.env.OPENAI_SECRET;
+    const jiraUser = core.getInput('atlassian-email') || process.env.ATLASSIAN_EMAIL || '';
+    const jiraApiToken = core.getInput('atlassian-secret') || process.env.ATLASSIAN_SECRET || '';
+    const openaiApiKey = core.getInput('openai-secret') || process.env.OPENAI_SECRET || '';
 
     const context = github.context;
-    const prDescription = context.payload.pull_request.body;
-    const prNumber = context.payload.pull_request.number;
-    const repoFullName = context.payload.repository.full_name;
+    const prDescription = context.payload.pull_request?.body || '';
+    const prNumber = context.payload.pull_request?.number ?? 0;
+    const repoFullName = context.payload.repository?.full_name || '';
     const workflowName = context.workflow;
 
     // Extract Jira ticket key from PR description
@@ -52,7 +59,7 @@ async function run() {
       }
     });
     
-    const jiraData = await jiraResponse.json();
+    const jiraData = await jiraResponse.json() as JiraResponse;
     
     if (!jiraResponse.ok) {
       throw new Error(`Jira API error: ${jiraResponse.status} - ${JSON.stringify(jiraData)}`);
@@ -72,19 +79,17 @@ async function run() {
     });
 
     const openaiData = await openAiClient.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-            {
-                role: "user",
-                content: prompt
-            }
-        ]
+      model: "gpt-4",
+      messages: [
+        {
+          role: "user",
+          content: prompt
+        }
+      ]
     });
 
-    // console.log('OpenAI API Response:', JSON.stringify(openaiData, null, 2));
-
     if (!openaiData?.choices?.[0]?.message?.content) {
-        throw new Error(`Unexpected OpenAI API response format: ${JSON.stringify(openaiData)}`);
+      throw new Error(`Unexpected OpenAI API response format: ${JSON.stringify(openaiData)}`);
     }
 
     console.log('OpenAI API request completed');
@@ -98,8 +103,7 @@ async function run() {
     const octokit = github.getOctokit(token);
     console.log('Octokit initialized');
 
-    const repoOwner = repoFullName.split('/')[0];
-    const repoName = repoFullName.split('/')[1];
+    const [repoOwner, repoName] = repoFullName.split('/');
     
     // Search for existing changelog comment
     const comments = await octokit.rest.issues.listComments({
@@ -109,7 +113,7 @@ async function run() {
     });
 
     const existingComment = comments.data.find(comment => 
-      comment.body.includes('<!-- generated-changelog -->')
+      comment.body?.includes('<!-- generated-changelog -->')
     );
 
     if (existingComment) {
@@ -134,7 +138,11 @@ async function run() {
 
     core.info(`Changelog operation completed for PR #${prNumber}`);
   } catch (error) {
-    core.setFailed(`Action failed: ${error.message}`);
+    if (error instanceof Error) {
+      core.setFailed(`Action failed: ${error.message}`);
+    } else {
+      core.setFailed('Action failed with unknown error');
+    }
   }
 }
 

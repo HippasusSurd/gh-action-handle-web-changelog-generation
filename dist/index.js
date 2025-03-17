@@ -42,6 +42,7 @@ Context:
 - Developer-facing changes (refactoring, tooling, configuration, workflow improvements) should strictly be placed under "👩‍💻 Internal".
 - Avoid categorizing any developer-facing improvements as major or minor features.
 - Use as few sections as possible; prefer using a single most-appropriate section unless multiple clearly distinct categories apply.
+- The output must always be contained in \`\`\` tags.
 
 Use the following refined changelog template:
 

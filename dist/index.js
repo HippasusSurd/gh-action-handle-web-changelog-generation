@@ -154,7 +154,7 @@ async function run() {
         const prNumber = context.payload.pull_request?.number ?? 0;
         const repoFullName = context.payload.repository?.full_name || '';
         const runId = context.runId;
-        const workflowUrl = `https://github.com/${repoFullName}/actions/runs/${runId}`;
+        const workflowUrl = `https://github.com/${repoFullName}/actions/runs/${runId}?query=event:workflow_dispatch`;
         // Extract Jira ticket key from PR description
         const ticketKeyMatch = prDescription.match(/\[(\w+-\d+)\]:/);
         if (!ticketKeyMatch) {

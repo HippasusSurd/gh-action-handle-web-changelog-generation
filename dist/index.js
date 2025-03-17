@@ -153,7 +153,8 @@ async function run() {
         const prDescription = context.payload.pull_request?.body || '';
         const prNumber = context.payload.pull_request?.number ?? 0;
         const repoFullName = context.payload.repository?.full_name || '';
-        const workflowName = context.workflow;
+        const runId = context.runId;
+        const workflowUrl = `https://github.com/${repoFullName}/actions/runs/${runId}`;
         // Extract Jira ticket key from PR description
         const ticketKeyMatch = prDescription.match(/\[(\w+-\d+)\]:/);
         if (!ticketKeyMatch) {
@@ -198,7 +199,6 @@ async function run() {
         console.log('OpenAI API request completed');
         const generatedChangelog = openaiData.choices[0].message.content.trim();
         console.log('Generated changelog:', generatedChangelog);
-        const workflowUrl = `https://github.com/${repoFullName}/actions/workflows/${workflowName}?query=event:workflow_dispatch`;
         // Initialize Octokit
         const octokit = github.getOctokit(token);
         console.log('Octokit initialized');

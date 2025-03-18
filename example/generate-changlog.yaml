@@ -1,0 +1,16 @@
+name: Generate Changelog
+on:
+  pull_request:
+    types: [opened, edited]
+
+jobs:
+  generate-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Leonardo-Interactive/gh-action-handle-web-changelog-generation@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          atlassian-base-url: ${{ secrets.ATLASSIAN_BASE_URL }}
+          atlassian-email: ${{ secrets.ATLASSIAN_EMAIL }}
+          atlassian-secret: ${{ secrets.ATLASSIAN_SECRET }}
+          openai-secret: ${{ secrets.OPENAI_SECRET }}

@@ -13,26 +13,17 @@ Context:
 Use the following refined changelog template:
 
 \`\`\`
-## 🚀 New major features:
-- [TICKET-ID] Significant, user-facing features that greatly enhance functionality or experience.
-
-## ✨ New minor features:
-- [TICKET-ID] Smaller improvements or additions that incrementally improve user experience.
-
-## 🛠️ Other changes:
-- [TICKET-ID] User-impacting updates that do not clearly fit other categories.
+## ✨ New features:
+- [TICKET-ID] Additional features that directly enhance the user experience.
 
 ## 🐞 Bugs fixed:
 - [TICKET-ID] Clearly described fixes for previously reported bugs affecting users.
 
-## 🖥 Copy changes:
-- [TICKET-ID] Textual updates, clarifications, or corrections.
+## 🎨 UI changes:
+- [TICKET-ID] UI/UX, visual or stylistic enhancements or copy changes.
 
-## 💅 Style changes:
-- [TICKET-ID] UI/UX, visual or stylistic enhancements.
-
-## 👩‍💻 Internal:
-- (Internal) [TICKET-ID] Developer-facing refactors, configuration changes, tooling or workflow enhancements.
+## 🛠️ Other changes:
+- [TICKET-ID] Updates that do not clearly fit into other categories including developer-facing changes.
 \`\`\`
 
 Given:

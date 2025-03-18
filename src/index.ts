@@ -19,7 +19,7 @@ interface JiraResponse {
 async function run(): Promise<void> {
   try {
     // Use GitHub Actions inputs with fallback to environment variables
-    const token = core.getInput('pr-bot-token') ?? ''
+    const token = core.getInput('github-token') ?? ''
     const jiraBaseUrl = (core.getInput('atlassian-base-url') ?? '').replace(/\/$/, '')
     const jiraUser = core.getInput('atlassian-email') ?? ''
     const jiraApiToken = core.getInput('atlassian-secret') ?? ''
@@ -39,7 +39,16 @@ async function run(): Promise<void> {
       core.setFailed('No Jira ticket key found.')
       return
     }
-    const ticketKey = ticketKeyMatch[1]
+
+    const ticketKeyPattern = /^[A-Z]+-\d+$/
+    const ticketKey = ticketKeyMatch
+      .reverse() // the ticket key is injected at the end of the PR description
+      .find(match => ticketKeyPattern.test(match)) 
+
+    if (!ticketKey) {
+      core.setFailed('No valid Jira ticket key found.')
+      return
+    }
 
     // Fetch Jira ticket details
     const jiraApiUrl = `${jiraBaseUrl}/rest/api/2/issue/${ticketKey}`
@@ -67,7 +76,7 @@ async function run(): Promise<void> {
 
     // Compose prompt for LLM
     const prompt = createPrompt(prTitle, prDescription, jiraTitle, jiraDescription)
-    console.log('Prompt:', prompt)
+
 
     const openAiClient = new OpenAI({
       apiKey: openaiApiKey,

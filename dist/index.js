@@ -145,11 +145,11 @@ dotenv_1.default.config({ path: path_1.default.join(__dirname, '.env') });
 async function run() {
     try {
         // Use GitHub Actions inputs with fallback to environment variables
-        const token = core.getInput('pr-bot-token') || process.env.PR_BOT_TOKEN || '';
-        const jiraBaseUrl = (core.getInput('atlassian-base-url') || process.env.ATLASSIAN_BASE_URL || '').replace(/\/$/, '');
-        const jiraUser = core.getInput('atlassian-email') || process.env.ATLASSIAN_EMAIL || '';
-        const jiraApiToken = core.getInput('atlassian-secret') || process.env.ATLASSIAN_SECRET || '';
-        const openaiApiKey = core.getInput('openai-secret') || process.env.OPENAI_SECRET || '';
+        const token = core.getInput('pr-bot-token') ?? '';
+        const jiraBaseUrl = (core.getInput('atlassian-base-url') ?? '').replace(/\/$/, '');
+        const jiraUser = core.getInput('atlassian-email') ?? '';
+        const jiraApiToken = core.getInput('atlassian-secret') ?? '';
+        const openaiApiKey = core.getInput('openai-secret') ?? '';
         const context = github.context;
         const prDescription = context.payload.pull_request?.body || '';
         const prTitle = context.payload.pull_request?.title || '';

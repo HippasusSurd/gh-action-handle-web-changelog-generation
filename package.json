@@ -4,7 +4,6 @@
   "description": "Handles creating a changelog via LLM for web PRs",
   "main": "index.js",
   "scripts": {
-    "test": "test",
     "build": "tsc && ncc build lib/index.js -o dist",
     "package": "npm run build"
   },

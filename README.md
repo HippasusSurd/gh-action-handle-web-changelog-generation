@@ -1,6 +1,6 @@
 # gh-action-handle-web-changelog-generation
 
-Handles creating a changelog via LLM for web PRs
+Handles automatically creating a changelog using AI for web PRs
 
 ## Overview
 
@@ -16,7 +16,7 @@ This GitHub Action automatically generates changelogs for pull requests by:
 
 ```yaml
 inputs:
-  pr-bot-token:
+  github-token:
     description: 'GitHub token for PR operations'
     required: true
   atlassian-base-url:
@@ -35,7 +35,7 @@ inputs:
 
 ### Required Permissions
 
-- PR Bot Token needs:
+- Github Token needs:
   - Issues (read/write)
   - Pull requests (read/write)
 - Jira API Token needs:
@@ -54,26 +54,7 @@ inputs:
    - Click the rerun link in the changelog comment
    - The action will update the existing comment with the new changelog
 
-## Example Workflow
-
-```yaml
-name: Generate Changelog
-on:
-  pull_request:
-    types: [opened, edited]
-
-jobs:
-  generate-changelog:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: your-org/gh-action-handle-web-changelog-generation@main
-        with:
-          pr-bot-token: ${{ secrets.GITHUB_TOKEN }}
-          atlassian-base-url: ${{ secrets.ATLASSIAN_BASE_URL }}
-          atlassian-email: ${{ secrets.ATLASSIAN_EMAIL }}
-          atlassian-secret: ${{ secrets.ATLASSIAN_SECRET }}
-          openai-secret: ${{ secrets.OPENAI_SECRET }}
-```
+[Example Workflow](/example/generate-changlog.yaml)
 
 ## Development
 

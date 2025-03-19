@@ -55,26 +55,17 @@ Context:
 Use the following refined changelog template:
 
 \`\`\`
-## 🚀 New major features:
-- [TICKET-ID] Significant, user-facing features that greatly enhance functionality or experience.
-
-## ✨ New minor features:
-- [TICKET-ID] Smaller improvements or additions that incrementally improve user experience.
-
-## 🛠️ Other changes:
-- [TICKET-ID] User-impacting updates that do not clearly fit other categories.
+## ✨ New features:
+- [TICKET-ID] Additional features that directly enhance the user experience.
 
 ## 🐞 Bugs fixed:
 - [TICKET-ID] Clearly described fixes for previously reported bugs affecting users.
 
-## 🖥 Copy changes:
-- [TICKET-ID] Textual updates, clarifications, or corrections.
+## 🎨 UI changes:
+- [TICKET-ID] UI/UX, visual or stylistic enhancements or copy changes.
 
-## 💅 Style changes:
-- [TICKET-ID] UI/UX, visual or stylistic enhancements.
-
-## 👩‍💻 Internal:
-- (Internal) [TICKET-ID] Developer-facing refactors, configuration changes, tooling or workflow enhancements.
+## 🛠️ Other changes:
+- [TICKET-ID] Updates that do not clearly fit into other categories including developer-facing changes.
 \`\`\`
 
 Given:
@@ -145,7 +136,7 @@ dotenv_1.default.config({ path: path_1.default.join(__dirname, '.env') });
 async function run() {
     try {
         // Use GitHub Actions inputs with fallback to environment variables
-        const token = core.getInput('pr-bot-token') ?? '';
+        const token = core.getInput('github-token') ?? '';
         const jiraBaseUrl = (core.getInput('atlassian-base-url') ?? '').replace(/\/$/, '');
         const jiraUser = core.getInput('atlassian-email') ?? '';
         const jiraApiToken = core.getInput('atlassian-secret') ?? '';
@@ -163,7 +154,14 @@ async function run() {
             core.setFailed('No Jira ticket key found.');
             return;
         }
-        const ticketKey = ticketKeyMatch[1];
+        const ticketKeyPattern = /^[A-Z]+-\d+$/;
+        const ticketKey = ticketKeyMatch
+            .reverse() // the ticket key is injected at the end of the PR description
+            .find(match => ticketKeyPattern.test(match));
+        if (!ticketKey) {
+            core.setFailed('No valid Jira ticket key found.');
+            return;
+        }
         // Fetch Jira ticket details
         const jiraApiUrl = `${jiraBaseUrl}/rest/api/2/issue/${ticketKey}`;
         console.log('Fetching Jira ticket from:', jiraApiUrl);
@@ -184,7 +182,6 @@ async function run() {
         const jiraDescription = jiraData.fields.description || "";
         // Compose prompt for LLM
         const prompt = (0, createPrompt_1.createPrompt)(prTitle, prDescription, jiraTitle, jiraDescription);
-        console.log('Prompt:', prompt);
         const openAiClient = new openai_1.default({
             apiKey: openaiApiKey,
         });
